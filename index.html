@@ -1,0 +1,1852 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cafe Bliss</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --espresso: #1a0e05;
+        --roast: #2e1a0a;
+        --amber: #c8903a;
+        --gold: #e4a94a;
+        --cream: #f5edd6;
+        --latte: #e8d5b0;
+        --mist: #f9f5ee;
+        --text: #2e1a0a;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--mist);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      /* ── NAVBAR ─────────────────────────────── */
+      .navbar {
+        background: rgba(26, 14, 5, 0.92) !important;
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(200, 144, 58, 0.2);
+        padding: 18px 0;
+        transition: padding 0.3s;
+      }
+      .navbar.scrolled {
+        padding: 10px 0;
+      }
+      .navbar-brand {
+        font-family: "Playfair Display", serif;
+        font-size: 1.7rem;
+        color: var(--amber) !important;
+        letter-spacing: 0.04em;
+      }
+      .nav-link {
+        color: rgba(245, 237, 214, 0.8) !important;
+        font-size: 0.88rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: color 0.25s;
+        position: relative;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--amber);
+        transition: width 0.3s;
+      }
+      .nav-link:hover {
+        color: var(--amber) !important;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      /* ── HERO ───────────────────────────────── */
+      .hero {
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-slide {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        transition: opacity 1.2s ease;
+      }
+      .hero-slide.active {
+        opacity: 1;
+      }
+      .hero-slide::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 14, 5, 0.75) 0%,
+          rgba(26, 14, 5, 0.35) 100%
+        );
+      }
+
+      .hero-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        text-align: center;
+        color: #fff;
+        padding: 0 20px;
+      }
+      .hero-eyebrow {
+        font-size: 0.78rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--amber);
+        margin-bottom: 16px;
+        animation: fadeUp 0.8s ease both;
+      }
+      .hero-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.8rem, 7vw, 5.5rem);
+        line-height: 1.1;
+        margin-bottom: 20px;
+        animation: fadeUp 0.8s 0.15s ease both;
+      }
+      .hero-sub {
+        font-size: 1.05rem;
+        color: rgba(255, 255, 255, 0.75);
+        margin-bottom: 36px;
+        animation: fadeUp 0.8s 0.3s ease both;
+      }
+      .hero-cta {
+        display: inline-block;
+        background: var(--amber);
+        color: var(--espresso);
+        padding: 14px 36px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 2px;
+        transition:
+          background 0.25s,
+          transform 0.25s;
+        animation: fadeUp 0.8s 0.45s ease both;
+      }
+      .hero-cta:hover {
+        background: var(--gold);
+        transform: translateY(-2px);
+      }
+
+      /* Dots */
+      .hero-dots {
+        position: absolute;
+        bottom: 32px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+      .hero-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.35);
+        border: none;
+        transition:
+          background 0.3s,
+          transform 0.3s;
+        cursor: pointer;
+      }
+      .hero-dot.active {
+        background: var(--amber);
+        transform: scale(1.3);
+      }
+
+      /* Scroll hint */
+      .scroll-hint {
+        position: absolute;
+        bottom: 36px;
+        right: 40px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        writing-mode: vertical-rl;
+      }
+      .scroll-line {
+        width: 1px;
+        height: 48px;
+        background: linear-gradient(to bottom, var(--amber), transparent);
+        animation: scrollPulse 2s infinite;
+      }
+
+      @keyframes scrollPulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* ── SECTION SHARED ─────────────────────── */
+      .section-header {
+        text-align: center;
+        padding: 90px 0 50px;
+      }
+      .section-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--amber);
+        margin-bottom: 10px;
+      }
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2rem, 4vw, 3rem);
+        color: var(--espresso);
+      }
+      .section-rule {
+        width: 48px;
+        height: 2px;
+        background: var(--amber);
+        margin: 18px auto 0;
+      }
+
+      /* ── MENU ───────────────────────────────── */
+      #menu {
+        background: var(--mist);
+        padding-bottom: 80px;
+      }
+
+      .menu-card {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(26, 14, 5, 0.06);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        border: 1px solid rgba(200, 144, 58, 0.12);
+      }
+      .menu-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(26, 14, 5, 0.14);
+      }
+      .menu-card-img {
+        height: 210px;
+        width: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+      .menu-card:hover .menu-card-img {
+        transform: scale(1.05);
+      }
+      .menu-card-body {
+        padding: 20px;
+      }
+      .menu-card-name {
+        font-family: "Playfair Display", serif;
+        font-size: 1.15rem;
+        margin-bottom: 4px;
+      }
+      .menu-card-desc {
+        font-size: 0.82rem;
+        color: #8a7060;
+        margin-bottom: 14px;
+      }
+      .menu-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .menu-price {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--amber);
+      }
+      .menu-add {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--amber);
+        color: var(--espresso);
+        border: none;
+        font-size: 1.1rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .menu-add:hover {
+        background: var(--gold);
+        transform: scale(1.15);
+      }
+
+      /* ── GALLERY ────────────────────────────── */
+      #gallery {
+        background: var(--espresso);
+        padding-bottom: 80px;
+      }
+      #gallery .section-title {
+        color: var(--cream);
+      }
+      #gallery .section-label {
+        color: var(--amber);
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: 240px 240px;
+        gap: 12px;
+      }
+      .g1 {
+        grid-column: 1/6;
+        grid-row: 1/3;
+      }
+      .g2 {
+        grid-column: 6/10;
+        grid-row: 1/2;
+      }
+      .g3 {
+        grid-column: 10/13;
+        grid-row: 1/2;
+      }
+      .g4 {
+        grid-column: 6/9;
+        grid-row: 2/3;
+      }
+      .g5 {
+        grid-column: 9/13;
+        grid-row: 2/3;
+      }
+
+      .gallery-item {
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+      }
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s;
+      }
+      .gallery-item::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(26, 14, 5, 0.5) 0%,
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .gallery-item:hover img {
+        transform: scale(1.08);
+      }
+      .gallery-item:hover::after {
+        opacity: 1;
+      }
+
+      @media (max-width: 768px) {
+        .gallery-grid {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: repeat(3, 180px);
+        }
+        .g1 {
+          grid-column: 1/3;
+          grid-row: 1/2;
+        }
+        .g2 {
+          grid-column: 1/2;
+          grid-row: 2/3;
+        }
+        .g3 {
+          grid-column: 2/3;
+          grid-row: 2/3;
+        }
+        .g4 {
+          grid-column: 1/2;
+          grid-row: 3/4;
+        }
+        .g5 {
+          grid-column: 2/3;
+          grid-row: 3/4;
+        }
+      }
+
+      /* ── ABOUT ──────────────────────────────── */
+      #about {
+        padding: 100px 0;
+        background: #fff;
+      }
+      .about-img-wrap {
+        position: relative;
+      }
+      .about-img-wrap img {
+        border-radius: 12px;
+        width: 100%;
+        height: 420px;
+        object-fit: cover;
+      }
+      .about-badge {
+        position: absolute;
+        bottom: -24px;
+        right: -24px;
+        background: var(--amber);
+        color: var(--espresso);
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: "Playfair Display", serif;
+        box-shadow: 0 8px 24px rgba(200, 144, 58, 0.35);
+      }
+      .about-badge-num {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .about-badge-text {
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+        text-align: center;
+      }
+      .about-content {
+        padding: 20px 0 0 32px;
+      }
+      .about-content h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 2.4rem;
+        margin-bottom: 20px;
+        color: var(--espresso);
+      }
+      .about-content p {
+        color: #6e5a4a;
+        line-height: 1.8;
+        margin-bottom: 14px;
+      }
+      .about-stats {
+        display: flex;
+        gap: 32px;
+        margin-top: 32px;
+      }
+      .stat-num {
+        font-family: "Playfair Display", serif;
+        font-size: 2rem;
+        color: var(--amber);
+        font-weight: 700;
+      }
+      .stat-label {
+        font-size: 0.78rem;
+        color: #8a7060;
+      }
+
+      @media (max-width: 768px) {
+        .about-content {
+          padding: 40px 0 0;
+        }
+        .about-badge {
+          display: none;
+        }
+      }
+
+      /* ── CONTACT ────────────────────────────── */
+      #contact {
+        background: var(--roast);
+        padding: 100px 0;
+      }
+      #contact .section-title {
+        color: var(--cream);
+      }
+      .contact-info h4 {
+        font-family: "Playfair Display", serif;
+        color: var(--amber);
+        margin-bottom: 20px;
+        font-size: 1.4rem;
+      }
+      .contact-info p {
+        color: rgba(245, 237, 214, 0.7);
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+      }
+      .contact-info .icon {
+        color: var(--amber);
+        margin-right: 8px;
+      }
+      .contact-form-wrap {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(200, 144, 58, 0.2);
+        border-radius: 16px;
+        padding: 36px;
+      }
+      .cb-input {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(200, 144, 58, 0.2);
+        color: #fff;
+        border-radius: 8px;
+        padding: 12px 16px;
+        width: 100%;
+        font-size: 0.9rem;
+        font-family: "DM Sans", sans-serif;
+        transition: border-color 0.25s;
+      }
+      .cb-input:focus {
+        outline: none;
+        border-color: var(--amber);
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .cb-input::placeholder {
+        color: rgba(245, 237, 214, 0.4);
+      }
+      .cb-btn {
+        background: var(--amber);
+        color: var(--espresso);
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 0.88rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          background 0.25s,
+          transform 0.25s;
+      }
+      .cb-btn:hover {
+        background: var(--gold);
+        transform: translateY(-2px);
+      }
+
+      /* ── FOOTER ─────────────────────────────── */
+      footer {
+        background: var(--espresso);
+        color: rgba(245, 237, 214, 0.5);
+        text-align: center;
+        padding: 24px;
+        font-size: 0.82rem;
+        border-top: 1px solid rgba(200, 144, 58, 0.15);
+      }
+      footer span {
+        color: var(--amber);
+      }
+
+      /* ══════════════════════════════════════════
+       MENU DETAIL MODAL
+    ══════════════════════════════════════════ */
+      .cb-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 14, 5, 0.65);
+        backdrop-filter: blur(6px);
+        z-index: 1050;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .cb-modal-overlay.open {
+        display: flex;
+      }
+
+      .cb-modal {
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        width: 100%;
+        max-width: 480px;
+        animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: scale(0.88);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .cb-modal-img {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+      }
+      .cb-modal-body {
+        padding: 28px;
+      }
+      .cb-modal-body h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        margin-bottom: 6px;
+      }
+      .cb-modal-price {
+        color: var(--amber);
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .cb-modal-desc {
+        color: #7a6050;
+        line-height: 1.7;
+        margin-bottom: 24px;
+      }
+      .cb-modal-cta {
+        background: var(--amber);
+        color: var(--espresso);
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        width: 100%;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition: background 0.25s;
+      }
+      .cb-modal-cta:hover {
+        background: var(--gold);
+      }
+      .cb-modal-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* ══════════════════════════════════════════
+       PAYMENT MODAL
+    ══════════════════════════════════════════ */
+      #payModal {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 14, 5, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 1100;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+      #payModal.open {
+        display: flex;
+      }
+
+      .pay-box {
+        background: #fff;
+        border-radius: 24px;
+        width: 100%;
+        max-width: 480px;
+        overflow: hidden;
+        animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* Header strip */
+      .pay-header {
+        background: var(--espresso);
+        padding: 24px 28px 20px;
+        position: relative;
+      }
+      .pay-header h4 {
+        font-family: "Playfair Display", serif;
+        color: var(--cream);
+        font-size: 1.3rem;
+        margin-bottom: 2px;
+      }
+      .pay-header p {
+        color: rgba(245, 237, 214, 0.5);
+        font-size: 0.82rem;
+      }
+      .pay-close {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .pay-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Steps */
+      .pay-steps {
+        display: flex;
+        gap: 0;
+        padding: 0 28px;
+        background: var(--roast);
+      }
+      .pay-step-btn {
+        flex: 1;
+        padding: 10px 6px;
+        background: none;
+        border: none;
+        color: rgba(245, 237, 214, 0.45);
+        font-size: 0.73rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition:
+          color 0.25s,
+          border-color 0.25s;
+      }
+      .pay-step-btn.active {
+        color: var(--amber);
+        border-color: var(--amber);
+      }
+
+      /* Body */
+      .pay-body {
+        padding: 28px;
+      }
+
+      /* Method selector */
+      .method-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+      .method-btn {
+        border: 2px solid #e8e0d6;
+        border-radius: 12px;
+        padding: 14px 8px;
+        background: #faf8f5;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: #7a6050;
+        letter-spacing: 0.04em;
+        text-align: center;
+        transition:
+          border-color 0.2s,
+          background 0.2s,
+          color 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .method-btn .method-icon {
+        font-size: 1.4rem;
+      }
+      .method-btn.selected {
+        border-color: var(--amber);
+        background: #fff9f0;
+        color: var(--roast);
+      }
+
+      /* Card visual */
+      .card-visual {
+        background: linear-gradient(
+          135deg,
+          #1a0e05 0%,
+          #3d2208 50%,
+          #c8903a 100%
+        );
+        border-radius: 16px;
+        padding: 22px;
+        color: #fff;
+        margin-bottom: 22px;
+        font-family: "Playfair Display", serif;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 12px 32px rgba(26, 14, 5, 0.25);
+      }
+      .card-visual::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.07);
+      }
+      .card-visual::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        left: -20px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .card-chip {
+        font-size: 1.6rem;
+        margin-bottom: 18px;
+      }
+      .card-number {
+        font-size: 1.18rem;
+        letter-spacing: 0.2em;
+        margin-bottom: 20px;
+        color: rgba(255, 255, 255, 0.9);
+        font-family: "DM Sans", monospace;
+      }
+      .card-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.65);
+      }
+      .card-row span:last-child {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.9rem;
+      }
+
+      /* Input group */
+      .pay-label {
+        font-size: 0.75rem;
+        color: #9a8070;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .pay-input {
+        border: 2px solid #e8e0d6;
+        border-radius: 10px;
+        padding: 12px 16px;
+        width: 100%;
+        font-size: 0.95rem;
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        background: #faf8f5;
+        transition: border-color 0.25s;
+        outline: none;
+      }
+      .pay-input:focus {
+        border-color: var(--amber);
+        background: #fff;
+      }
+      .pay-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .field-group {
+        margin-bottom: 16px;
+      }
+
+      /* UPI panel */
+      .upi-panel {
+        display: none;
+      }
+      .upi-panel.show {
+        display: block;
+      }
+      .upi-qr {
+        background: #f5f5f5;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .upi-qr-box {
+        width: 130px;
+        height: 130px;
+        margin: 0 auto 12px;
+        background: #fff;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+      }
+      .upi-id {
+        font-size: 0.85rem;
+        color: #9a8070;
+        background: #fff;
+        border-radius: 6px;
+        padding: 8px 14px;
+        display: inline-block;
+        font-family: monospace;
+      }
+      .or-divider {
+        text-align: center;
+        margin: 16px 0;
+        font-size: 0.78rem;
+        color: #b0a090;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .or-divider::before,
+      .or-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e8e0d6;
+      }
+
+      /* COD panel */
+      .cod-panel {
+        display: none;
+      }
+      .cod-panel.show {
+        display: block;
+      }
+      .cod-info {
+        background: #f5f9f0;
+        border: 1px solid #c8e0a0;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+      }
+      .cod-icon {
+        font-size: 2.4rem;
+        margin-bottom: 10px;
+      }
+      .cod-info p {
+        color: #5a7030;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      /* Pay button */
+      .pay-btn {
+        background: linear-gradient(135deg, var(--amber), var(--gold));
+        color: var(--espresso);
+        border: none;
+        padding: 15px;
+        border-radius: 12px;
+        width: 100%;
+        font-size: 0.92rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        margin-top: 8px;
+      }
+      .pay-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(200, 144, 58, 0.35);
+      }
+
+      /* Order summary */
+      .order-summary {
+        background: #faf8f5;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .order-thumb {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        object-fit: cover;
+      }
+      .order-info .name {
+        font-weight: 500;
+        font-size: 0.95rem;
+        margin-bottom: 2px;
+      }
+      .order-info .price {
+        color: var(--amber);
+        font-weight: 600;
+      }
+
+      /* Success screen */
+      .pay-success {
+        display: none;
+        text-align: center;
+        padding: 40px 28px;
+      }
+      .pay-success.show {
+        display: block;
+      }
+      .success-ring {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #e8f5e0;
+        margin: 0 auto 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.4rem;
+        animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      @keyframes popIn {
+        from {
+          transform: scale(0);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+      .pay-success h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+        color: var(--espresso);
+      }
+      .pay-success p {
+        color: #8a7060;
+        margin-bottom: 24px;
+      }
+      .pay-success .order-id {
+        background: #faf8f5;
+        border-radius: 10px;
+        padding: 12px 20px;
+        font-family: monospace;
+        font-size: 0.88rem;
+        color: var(--amber);
+        margin-bottom: 24px;
+        display: inline-block;
+      }
+      .pay-success-btn {
+        background: var(--espresso);
+        color: #fff;
+        border: none;
+        padding: 13px 32px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.88rem;
+        font-weight: 500;
+      }
+
+      /* Loading overlay */
+      .pay-loading {
+        display: none;
+        text-align: center;
+        padding: 40px 28px;
+      }
+      .pay-loading.show {
+        display: block;
+      }
+      .spinner {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 4px solid #f0ebe3;
+        border-top-color: var(--amber);
+        animation: spin 1s linear infinite;
+        margin: 0 auto 18px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .pay-loading p {
+        color: #8a7060;
+        font-size: 0.9rem;
+      }
+
+      .d-none {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── NAVBAR ────────────────────────────────────────── -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">✦ Cafe Bliss</a>
+        <button
+          class="navbar-toggler"
+          data-bs-toggle="collapse"
+          data-bs-target="#nav"
+          style="border-color: rgba(200, 144, 58, 0.4)"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav">
+          <ul class="navbar-nav ms-auto gap-2">
+            <li class="nav-item"><a class="nav-link" href="#menu">Menu</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#gallery">Gallery</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── HERO ──────────────────────────────────────────── -->
+    <section class="hero" id="home">
+      <div
+        class="hero-slide active"
+        style="
+          background-image: url(&quot;https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=1800&q=80&quot;);
+        "
+      ></div>
+      <div
+        class="hero-slide"
+        style="
+          background-image: url(&quot;https://images.unsplash.com/photo-1498804103079-a6351b050096?w=1800&q=80&quot;);
+        "
+      ></div>
+      <div
+        class="hero-slide"
+        style="
+          background-image: url(&quot;https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1800&q=80&quot;);
+        "
+      ></div>
+
+      <div class="hero-content">
+        <p class="hero-eyebrow">Est. 2018 · Premium Coffee</p>
+        <h1 class="hero-title" id="heroTitle">
+          Perfect Coffee<br /><em>Experience</em>
+        </h1>
+        <p class="hero-sub" id="heroSub">
+          Start your day with the best taste in town
+        </p>
+        <a href="#menu" class="hero-cta">Explore Menu</a>
+      </div>
+
+      <div class="hero-dots" id="heroDots">
+        <button class="hero-dot active" onclick="goSlide(0)"></button>
+        <button class="hero-dot" onclick="goSlide(1)"></button>
+        <button class="hero-dot" onclick="goSlide(2)"></button>
+      </div>
+
+      <div class="scroll-hint">
+        <div class="scroll-line"></div>
+        Scroll
+      </div>
+    </section>
+
+    <!-- ── MENU ──────────────────────────────────────────── -->
+    <section id="menu">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">What We Serve</p>
+          <h2 class="section-title">Our Menu</h2>
+          <div class="section-rule"></div>
+        </div>
+        <div class="row g-4">
+          <div
+            class="col-md-3 col-sm-6"
+            data-name="Cappuccino"
+            data-price="$4"
+            data-img="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=700&q=80"
+            data-desc="A perfect blend of rich espresso and velvety steamed milk, crowned with a layer of dense, creamy foam."
+          >
+            <div
+              class="menu-card h-100"
+              onclick="openItemModal(this.parentElement)"
+            >
+              <img
+                class="menu-card-img"
+                src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=700&q=80"
+                alt="Cappuccino"
+              />
+              <div class="menu-card-body">
+                <h5 class="menu-card-name">Cappuccino</h5>
+                <p class="menu-card-desc">
+                  Rich espresso with velvety steamed milk
+                </p>
+                <div class="menu-card-footer">
+                  <span class="menu-price">$4</span>
+                  <button class="menu-add">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-md-3 col-sm-6"
+            data-name="Café Latte"
+            data-price="$5"
+            data-img="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80"
+            data-desc="Silky smooth espresso with generous steamed milk and a delicate skim of microfoam on top."
+          >
+            <div
+              class="menu-card h-100"
+              onclick="openItemModal(this.parentElement)"
+            >
+              <img
+                class="menu-card-img"
+                src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80"
+                alt="Latte"
+              />
+              <div class="menu-card-body">
+                <h5 class="menu-card-name">Café Latte</h5>
+                <p class="menu-card-desc">Smooth milk coffee with light foam</p>
+                <div class="menu-card-footer">
+                  <span class="menu-price">$5</span>
+                  <button class="menu-add">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-md-3 col-sm-6"
+            data-name="Artisan Burger"
+            data-price="$6"
+            data-img="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&q=80"
+            data-desc="Juicy hand-pressed patty with fresh garden ingredients, smoked cheddar, and house-made secret sauce."
+          >
+            <div
+              class="menu-card h-100"
+              onclick="openItemModal(this.parentElement)"
+            >
+              <img
+                class="menu-card-img"
+                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&q=80"
+                alt="Burger"
+              />
+              <div class="menu-card-body">
+                <h5 class="menu-card-name">Artisan Burger</h5>
+                <p class="menu-card-desc">
+                  Juicy grilled burger, fresh ingredients
+                </p>
+                <div class="menu-card-footer">
+                  <span class="menu-price">$6</span>
+                  <button class="menu-add">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-md-3 col-sm-6"
+            data-name="Stone Baked Pizza"
+            data-price="$8"
+            data-img="https://images.unsplash.com/photo-1550547660-d9450f859349?w=700&q=80"
+            data-desc="Hand-stretched dough topped with San Marzano tomatoes, fresh mozzarella, and seasonal toppings."
+          >
+            <div
+              class="menu-card h-100"
+              onclick="openItemModal(this.parentElement)"
+            >
+              <img
+                class="menu-card-img"
+                src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=700&q=80"
+                alt="Pizza"
+              />
+              <div class="menu-card-body">
+                <h5 class="menu-card-name">Stone Baked Pizza</h5>
+                <p class="menu-card-desc">
+                  Cheesy pizza with fresh seasonal toppings
+                </p>
+                <div class="menu-card-footer">
+                  <span class="menu-price">$8</span>
+                  <button class="menu-add">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── GALLERY ─────────────────────────────────────── -->
+    <section id="gallery">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">Inside Bliss</p>
+          <h2 class="section-title">Gallery</h2>
+          <div class="section-rule"></div>
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-item g1">
+            <img
+              src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=900&q=80"
+              alt="Coffee"
+            />
+          </div>
+          <div class="gallery-item g2">
+            <img
+              src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=700&q=80"
+              alt="Interior"
+            />
+          </div>
+          <div class="gallery-item g3">
+            <img
+              src="https://images.unsplash.com/photo-1498804103079-a6351b050096?w=500&q=80"
+              alt="Interior"
+            />
+          </div>
+          <div class="gallery-item g4">
+            <img
+              src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=700&q=80"
+              alt="Cappuccino"
+            />
+          </div>
+          <div class="gallery-item g5">
+            <img
+              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80"
+              alt="Food"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT ──────────────────────────────────────── -->
+    <section id="about">
+      <div class="container">
+        <div class="row g-5 align-items-center">
+          <div class="col-lg-5">
+            <div class="about-img-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800&q=80"
+                alt="About Cafe Bliss"
+              />
+              <div class="about-badge">
+                <span class="about-badge-num">8+</span>
+                <span class="about-badge-text">Years of<br />Excellence</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="about-content">
+              <p class="section-label">Our Story</p>
+              <h2>Welcome to<br />Cafe Bliss</h2>
+              <p>
+                We believe great coffee is more than a drink — it's a moment of
+                pause, a conversation starter, a ritual that grounds you. Every
+                cup we serve is crafted with intention.
+              </p>
+              <p>
+                Our mission is to deliver premium coffee and delicious meals in
+                a warm, relaxing environment where every guest feels at home.
+              </p>
+              <div class="about-stats">
+                <div>
+                  <div class="stat-num">12K+</div>
+                  <div class="stat-label">Happy Customers</div>
+                </div>
+                <div>
+                  <div class="stat-num">40+</div>
+                  <div class="stat-label">Menu Items</div>
+                </div>
+                <div>
+                  <div class="stat-num">5★</div>
+                  <div class="stat-label">Average Rating</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CONTACT ────────────────────────────────────── -->
+    <section id="contact">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">Say Hello</p>
+          <h2 class="section-title">Get In Touch</h2>
+          <div class="section-rule"></div>
+        </div>
+        <div class="row g-5">
+          <div class="col-lg-4">
+            <div class="contact-info">
+              <h4>Cafe Bliss</h4>
+              <p>📍 123 Coffee Street, Surat, Gujarat</p>
+              <p>📞 +91 9876543210</p>
+              <p>✉️ hello@cafebliss.in</p>
+              <p>🕐 Mon – Sun: 7 AM – 11 PM</p>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="contact-form-wrap">
+              <form id="contactForm">
+                <div class="row g-3">
+                  <div class="col-sm-6">
+                    <input
+                      type="text"
+                      class="cb-input"
+                      placeholder="Your Name"
+                      required
+                    />
+                  </div>
+                  <div class="col-sm-6">
+                    <input
+                      type="email"
+                      class="cb-input"
+                      placeholder="Email Address"
+                      required
+                    />
+                  </div>
+                  <div class="col-12">
+                    <textarea
+                      class="cb-input"
+                      rows="4"
+                      placeholder="Write your message..."
+                    ></textarea>
+                  </div>
+                  <div class="col-12">
+                    <button type="submit" class="cb-btn">Send Message</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ─────────────────────────────────────── -->
+    <footer>
+      <p>© 2026 <span>Cafe Bliss</span> · Crafted with ☕ in Surat</p>
+    </footer>
+
+    <!-- ══════════════════════════════════════════
+     MENU DETAIL MODAL
+══════════════════════════════════════════ -->
+    <div
+      class="cb-modal-overlay"
+      id="itemOverlay"
+      onclick="closeItemModal(event)"
+    >
+      <div class="cb-modal" style="position: relative">
+        <button class="cb-modal-close" onclick="closeItemModal(null, true)">
+          ✕
+        </button>
+        <img class="cb-modal-img" id="iImg" src="" alt="" />
+        <div class="cb-modal-body">
+          <h3 id="iName"></h3>
+          <div class="cb-modal-price" id="iPrice"></div>
+          <p class="cb-modal-desc" id="iDesc"></p>
+          <button class="cb-modal-cta" onclick="proceedToPay()">
+            Order & Pay →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+     PAYMENT MODAL
+══════════════════════════════════════════ -->
+    <div id="payModal" onclick="closePayModal(event)">
+      <div class="pay-box" id="payBox">
+        <div class="pay-header">
+          <h4>Complete Payment</h4>
+          <p>Secure checkout · SSL encrypted</p>
+          <button class="pay-close" onclick="closePayModal(null, true)">
+            ✕
+          </button>
+        </div>
+
+        <!-- Steps tab -->
+        <div class="pay-steps">
+          <button class="pay-step-btn active" id="sTab1">💳 Card</button>
+          <button class="pay-step-btn" id="sTab2">📲 UPI</button>
+          <button class="pay-step-btn" id="sTab3">🏠 Cash</button>
+        </div>
+
+        <!-- Main body -->
+        <div class="pay-body" id="payFormArea">
+          <!-- Order summary -->
+          <div class="order-summary">
+            <img class="order-thumb" id="orderThumb" src="" alt="" />
+            <div class="order-info">
+              <div class="name" id="orderName"></div>
+              <div class="price" id="orderPrice"></div>
+            </div>
+          </div>
+
+          <!-- ── Card Panel ── -->
+          <div id="cardPanel">
+            <!-- Live card visual -->
+            <div class="card-visual">
+              <div class="card-chip">▬▬</div>
+              <div class="card-number" id="cvNum">•••• •••• •••• ••••</div>
+              <div class="card-row">
+                <div>
+                  <div
+                    style="font-size: 0.65rem; opacity: 0.6; margin-bottom: 2px"
+                  >
+                    Card Holder
+                  </div>
+                  <span id="cvName" style="color: #fff; font-size: 0.88rem"
+                    >Your Name</span
+                  >
+                </div>
+                <div>
+                  <div
+                    style="font-size: 0.65rem; opacity: 0.6; margin-bottom: 2px"
+                  >
+                    Expires
+                  </div>
+                  <span id="cvExp">MM/YY</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <div class="pay-label">Card Number</div>
+              <input
+                class="pay-input"
+                id="inpNum"
+                placeholder="1234 5678 9012 3456"
+                maxlength="19"
+                oninput="fmtCard(this)"
+              />
+            </div>
+            <div class="field-group">
+              <div class="pay-label">Card Holder Name</div>
+              <input
+                class="pay-input"
+                id="inpName"
+                placeholder="Full Name"
+                oninput="
+                  document.getElementById('cvName').innerText =
+                    this.value || 'Your Name'
+                "
+              />
+            </div>
+            <div class="pay-row">
+              <div class="field-group">
+                <div class="pay-label">Expiry</div>
+                <input
+                  class="pay-input"
+                  id="inpExp"
+                  placeholder="MM / YY"
+                  maxlength="7"
+                  oninput="fmtExp(this)"
+                />
+              </div>
+              <div class="field-group">
+                <div class="pay-label">CVV</div>
+                <input
+                  class="pay-input"
+                  placeholder="•••"
+                  maxlength="3"
+                  type="password"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ── UPI Panel ── -->
+          <div class="upi-panel" id="upiPanel">
+            <div class="upi-qr">
+              <div class="upi-qr-box">📷</div>
+              <p style="font-size: 0.8rem; color: #9a8070; margin-bottom: 10px">
+                Scan with any UPI app
+              </p>
+              <div class="upi-id">cafebliss@upi</div>
+            </div>
+            <div class="or-divider">or enter UPI ID</div>
+            <div class="field-group">
+              <div class="pay-label">Your UPI ID</div>
+              <input class="pay-input" placeholder="yourname@bank" />
+            </div>
+          </div>
+
+          <!-- ── COD Panel ── -->
+          <div class="cod-panel" id="codPanel">
+            <div class="cod-info">
+              <div class="cod-icon">🏠</div>
+              <p>
+                Pay in cash when your order is delivered. Our team will collect
+                the amount at your doorstep. No extra charges.
+              </p>
+            </div>
+            <div
+              style="
+                margin-top: 16px;
+                padding: 14px;
+                background: #faf8f5;
+                border-radius: 10px;
+                font-size: 0.85rem;
+                color: #7a6050;
+              "
+            >
+              <strong>Order Total:</strong>
+              <span
+                id="codTotal"
+                style="color: var(--amber); font-weight: 600"
+              ></span>
+            </div>
+          </div>
+
+          <button class="pay-btn" onclick="processPayment()">
+            Pay Now &nbsp;→
+          </button>
+        </div>
+
+        <!-- Loading state -->
+        <div class="pay-loading" id="payLoading">
+          <div class="spinner"></div>
+          <p>
+            Processing your payment…<br /><span
+              style="font-size: 0.78rem; opacity: 0.6"
+              >Please do not close this window</span
+            >
+          </p>
+        </div>
+
+        <!-- Success state -->
+        <div class="pay-success" id="paySuccess">
+          <div class="success-ring">✅</div>
+          <h3>Payment Successful!</h3>
+          <p>Your order has been placed. We'll have it ready soon.</p>
+          <div class="order-id" id="successOrderId"></div>
+          <br />
+          <button class="pay-success-btn" onclick="closeAll()">
+            Back to Menu
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // ── NAVBAR SHRINK ─────────────────────
+      window.addEventListener("scroll", () => {
+        document
+          .querySelector(".navbar")
+          .classList.toggle("scrolled", scrollY > 60);
+      });
+
+      // ── HERO SLIDESHOW ────────────────────
+      const slides = document.querySelectorAll(".hero-slide");
+      const dots = document.querySelectorAll(".hero-dot");
+      const titles = [
+        "Perfect Coffee<br><em>Experience</em>",
+        "Fresh &amp; Delicious<br><em>Food</em>",
+        "Relax &amp;<br><em>Enjoy</em>",
+      ];
+      const subs = [
+        "Start your day with the best taste in town",
+        "Quality ingredients, amazing flavors",
+        "Your perfect coffee spot",
+      ];
+      let cur = 0,
+        timer;
+
+      function goSlide(n) {
+        slides[cur].classList.remove("active");
+        dots[cur].classList.remove("active");
+        cur = n;
+        slides[cur].classList.add("active");
+        dots[cur].classList.add("active");
+        document.getElementById("heroTitle").innerHTML = titles[cur];
+        document.getElementById("heroSub").textContent = subs[cur];
+        clearInterval(timer);
+        timer = setInterval(() => goSlide((cur + 1) % slides.length), 5000);
+      }
+      timer = setInterval(() => goSlide((cur + 1) % slides.length), 5000);
+
+      // ── ITEM MODAL ───────────────────────
+      let currentItem = {};
+
+      function openItemModal(col) {
+        currentItem = {
+          name: col.dataset.name,
+          price: col.dataset.price,
+          img: col.dataset.img,
+          desc: col.dataset.desc,
+        };
+        document.getElementById("iImg").src = currentItem.img;
+        document.getElementById("iName").textContent = currentItem.name;
+        document.getElementById("iPrice").textContent = currentItem.price;
+        document.getElementById("iDesc").textContent = currentItem.desc;
+        document.getElementById("itemOverlay").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+      function closeItemModal(e, force) {
+        if (force || e.target === document.getElementById("itemOverlay")) {
+          document.getElementById("itemOverlay").classList.remove("open");
+          document.body.style.overflow = "";
+        }
+      }
+
+      // ── PAY MODAL ────────────────────────
+      function proceedToPay() {
+        document.getElementById("itemOverlay").classList.remove("open");
+        // populate order summary
+        document.getElementById("orderThumb").src = currentItem.img;
+        document.getElementById("orderName").textContent = currentItem.name;
+        document.getElementById("orderPrice").textContent = currentItem.price;
+        document.getElementById("codTotal").textContent = currentItem.price;
+        // reset UI
+        resetPayModal();
+        document.getElementById("payModal").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closePayModal(e, force) {
+        if (force || e.target === document.getElementById("payModal")) {
+          document.getElementById("payModal").classList.remove("open");
+          document.body.style.overflow = "";
+        }
+      }
+      function closeAll() {
+        document.getElementById("payModal").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      function resetPayModal() {
+        document.getElementById("payFormArea").style.display = "block";
+        document.getElementById("payLoading").classList.remove("show");
+        document.getElementById("paySuccess").classList.remove("show");
+        selectMethod("card");
+        // clear inputs
+        ["inpNum", "inpName", "inpExp"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
+        });
+        document.getElementById("cvNum").textContent = "•••• •••• •••• ••••";
+        document.getElementById("cvName").textContent = "Your Name";
+        document.getElementById("cvExp").textContent = "MM/YY";
+      }
+
+      // method tabs
+      ["sTab1", "sTab2", "sTab3"].forEach((id, i) => {
+        document.getElementById(id).addEventListener("click", () => {
+          selectMethod(["card", "upi", "cod"][i]);
+        });
+      });
+
+      function selectMethod(m) {
+        document.getElementById("cardPanel").style.display =
+          m === "card" ? "block" : "none";
+        document
+          .getElementById("upiPanel")
+          .classList.toggle("show", m === "upi");
+        document
+          .getElementById("codPanel")
+          .classList.toggle("show", m === "cod");
+        ["sTab1", "sTab2", "sTab3"].forEach((id) =>
+          document.getElementById(id).classList.remove("active"),
+        );
+        document
+          .getElementById(
+            m === "card" ? "sTab1" : m === "upi" ? "sTab2" : "sTab3",
+          )
+          .classList.add("active");
+      }
+
+      // card formatting
+      function fmtCard(el) {
+        let v = el.value.replace(/\D/g, "").slice(0, 16);
+        el.value = v.match(/.{1,4}/g)?.join(" ") || v;
+        const masked = (v + "                ").slice(0, 16);
+        document.getElementById("cvNum").textContent =
+          masked.match(/.{1,4}/g)?.join(" ") || "•••• •••• •••• ••••";
+      }
+      function fmtExp(el) {
+        let v = el.value.replace(/\D/g, "").slice(0, 4);
+        if (v.length >= 3) v = v.slice(0, 2) + " / " + v.slice(2);
+        el.value = v;
+        document.getElementById("cvExp").textContent = v || "MM/YY";
+      }
+
+      // process payment
+      function processPayment() {
+        document.getElementById("payFormArea").style.display = "none";
+        document.getElementById("payLoading").classList.add("show");
+        setTimeout(() => {
+          document.getElementById("payLoading").classList.remove("show");
+          const orderId =
+            "CB-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+          document.getElementById("successOrderId").textContent =
+            "Order ID: " + orderId;
+          document.getElementById("paySuccess").classList.add("show");
+        }, 2400);
+      }
+
+      // ── CONTACT FORM ──────────────────────
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const btn = this.querySelector("button");
+          btn.textContent = "Message Sent ✓";
+          btn.style.background = "#4a8a30";
+          btn.style.color = "#fff";
+          setTimeout(() => {
+            btn.textContent = "Send Message";
+            btn.style.background = "";
+            btn.style.color = "";
+          }, 3000);
+          this.reset();
+        });
+    </script>
+  </body>
+</html>
